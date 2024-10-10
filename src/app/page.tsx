@@ -1,4 +1,9 @@
+"use client";
+
 import Image from "next/image";
+import { Link } from "@chakra-ui/next-js";
+import { Button } from "@chakra-ui/react";
+
 import styles from "./page.module.css";
 
 export default function Home() {
@@ -18,6 +23,14 @@ export default function Home() {
             Get started by editing <code>src/app/page.tsx</code>.
           </li>
           <li>Save and see your changes instantly.</li>
+          <li>
+            Chakra <Link href="/about">Link</Link> Component.
+          </li>
+          <li>
+            <Button colorScheme="blue" size="sm">
+              Chakra Button
+            </Button>
+          </li>
         </ol>
 
         <div className={styles.ctas}>
