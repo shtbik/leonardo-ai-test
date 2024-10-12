@@ -20,7 +20,7 @@ const CHARACTERS_QUERY = gql`
   }
 `;
 
-export default function Info() {
+export default function Index() {
   const { data, loading, error } = useQuery(CHARACTERS_QUERY);
 
   if (loading) {
