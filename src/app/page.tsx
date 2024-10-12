@@ -1,14 +1,5 @@
-import { cookies } from "next/headers";
-
-type TSessionData = {
-  username: string;
-  job: string;
-};
-
-export async function getSessionData(): Promise<TSessionData> {
-  const user = cookies().get("auth")?.value;
-  return JSON.parse(user || "");
-}
+import Link from "next/link";
+import { getSessionData } from "@/utils/session";
 
 export default async function Home() {
   const user = await getSessionData();
@@ -16,7 +7,13 @@ export default async function Home() {
   return (
     <div>
       <main>
-        <h1>Hello, {user.username}!</h1>
+        <h1>
+          Hello, {user.username} - {user.job}!
+        </h1>
+
+        <p>
+          <Link href="/profile">Update</Link> profile
+        </p>
       </main>
     </div>
   );

@@ -1,8 +1,9 @@
+import type { TSessionData } from "@/types/session";
 import { cookies } from "next/headers";
 import type { NextRequest } from "next/server";
 
 export async function POST(req: NextRequest) {
-  const sessionData = await req.json();
+  const sessionData = (await req.json()) as TSessionData;
 
   const cookieStore = cookies();
   cookieStore.set("auth", JSON.stringify(sessionData), {

@@ -10,25 +10,33 @@ import {
   Box,
   Button,
   Flex,
-  FormControl,
   Heading,
   Input,
   Stack,
 } from "@chakra-ui/react";
 
-type FormState = {
+type TInitialValues = {
+  username: string;
+  job: string;
+};
+
+type TFormState = {
   success?: boolean;
   message?: string;
   description?: string;
 };
 
-export default function Login() {
-  const { push } = useRouter();
+type LoginProps = {
+  initialValues: TInitialValues;
+};
+
+export default function Login({ initialValues }: Readonly<LoginProps>) {
+  const { push, refresh } = useRouter();
 
   const handleSubmit = async (
-    _currentState: FormState,
+    _currentState: TFormState,
     formData: FormData,
-  ): Promise<FormState> => {
+  ): Promise<TFormState> => {
     const data = Object.fromEntries(formData.entries());
     try {
       await fetch("/api/login", {
@@ -36,6 +44,7 @@ export default function Login() {
         body: JSON.stringify(data),
       });
       push("/");
+      refresh();
       return { success: true };
     } catch {
       return {
@@ -46,7 +55,7 @@ export default function Login() {
     }
   };
 
-  const [state, formAction] = useFormState<FormState, FormData>(
+  const [state, formAction] = useFormState<TFormState, FormData>(
     handleSubmit,
     {},
   );
@@ -85,12 +94,18 @@ export default function Login() {
               backgroundColor="whiteAlpha.900"
               boxShadow="md"
             >
-              <FormControl>
-                <Input name="username" placeholder="Username" required />
-              </FormControl>
-              <FormControl>
-                <Input name="job" placeholder="Job title" required />
-              </FormControl>
+              <Input
+                name="username"
+                placeholder="Username"
+                required
+                defaultValue={initialValues?.username}
+              />
+              <Input
+                name="job"
+                placeholder="Job title"
+                required
+                defaultValue={initialValues?.job}
+              />
               <Submit />
             </Stack>
           </form>
