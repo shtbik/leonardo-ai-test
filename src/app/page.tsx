@@ -11,9 +11,16 @@ export default async function Home() {
           Hello, {user.username} - {user.job}!
         </h1>
 
-        <p>
-          <Link href="/profile">Update</Link> profile
-        </p>
+        <ul>
+          <li>
+            {" "}
+            <Link href="/profile">Profile</Link>
+          </li>
+          <li>
+            {" "}
+            <Link href="/info">Information</Link>
+          </li>
+        </ul>
       </main>
     </div>
   );

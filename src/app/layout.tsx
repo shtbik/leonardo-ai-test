@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { ChakraProvider } from "@chakra-ui/react";
+import { ApolloWrapper } from "@/app/ApolloWrapper";
 
 import "./globals.css";
 
@@ -16,7 +17,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        <ChakraProvider>{children}</ChakraProvider>
+        <ApolloWrapper>
+          <ChakraProvider>{children}</ChakraProvider>
+        </ApolloWrapper>
       </body>
     </html>
   );
