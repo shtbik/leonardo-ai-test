@@ -2,7 +2,7 @@ import type { NextRequest } from "next/server";
 
 /**
  *
- * @description Auth middleware. Block access to pages if user is not authenticated.
+ * @description Auth Middleware. Block access to pages if user is not authenticated.
  */
 export function middleware(request: NextRequest) {
   const currentUser = request.cookies.get("auth");
