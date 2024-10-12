@@ -1,18 +1,22 @@
-"use client";
+import { cookies } from "next/headers";
 
-import { Link } from "@chakra-ui/next-js";
+type TSessionData = {
+  username: string;
+  job: string;
+};
 
-export default function Home() {
+export async function getSessionData(): Promise<TSessionData> {
+  const user = cookies().get("auth")?.value;
+  return JSON.parse(user || "");
+}
+
+export default async function Home() {
+  const user = await getSessionData();
+
   return (
     <div>
       <main>
-        <h1>Hello, World!</h1>
-
-        <ol>
-          <li>
-            Chakra <Link href="/login">Link</Link> Component.
-          </li>
-        </ol>
+        <h1>Hello, {user.username}!</h1>
       </main>
     </div>
   );

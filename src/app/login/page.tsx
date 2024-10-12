@@ -1,16 +1,56 @@
 "use client";
 
+import { useFormState, useFormStatus } from "react-dom";
+import { useRouter } from "next/navigation";
 import {
+  Alert,
+  AlertIcon,
+  AlertTitle,
+  AlertDescription,
+  Box,
+  Button,
   Flex,
+  FormControl,
   Heading,
   Input,
-  Button,
   Stack,
-  Box,
-  FormControl,
 } from "@chakra-ui/react";
 
+type FormState = {
+  success?: boolean;
+  message?: string;
+  description?: string;
+};
+
 export default function Login() {
+  const { push } = useRouter();
+
+  const handleSubmit = async (
+    _currentState: FormState,
+    formData: FormData,
+  ): Promise<FormState> => {
+    const data = Object.fromEntries(formData.entries());
+    try {
+      await fetch("/api/login", {
+        method: "POST",
+        body: JSON.stringify(data),
+      });
+      push("/");
+      return { success: true };
+    } catch {
+      return {
+        success: false,
+        message: "An error occurred!",
+        description: "Try again later.",
+      };
+    }
+  };
+
+  const [state, formAction] = useFormState<FormState, FormData>(
+    handleSubmit,
+    {},
+  );
+
   return (
     <Flex
       flexDirection="column"
@@ -28,7 +68,17 @@ export default function Login() {
       >
         <Heading>Welcome</Heading>
         <Box minW={{ sm: "468px" }}>
-          <form>
+          {state?.success === false && (
+            <Alert status="error" mb={4}>
+              <AlertIcon />
+              {state.message && <AlertTitle>{state.message}</AlertTitle>}
+              {state.description && (
+                <AlertDescription>{state.description}</AlertDescription>
+              )}
+            </Alert>
+          )}
+
+          <form action={formAction}>
             <Stack
               spacing={4}
               p="1rem"
@@ -36,28 +86,32 @@ export default function Login() {
               boxShadow="md"
             >
               <FormControl>
-                <Input
-                  type="string"
-                  name="username"
-                  placeholder="Username"
-                  required
-                />
+                <Input name="username" placeholder="Username" required />
               </FormControl>
               <FormControl>
-                <Input
-                  type="password"
-                  name="job"
-                  placeholder="Job title"
-                  required
-                />
+                <Input name="job" placeholder="Job title" required />
               </FormControl>
-              <Button type="submit" variant="solid" width="full">
-                Login
-              </Button>
+              <Submit />
             </Stack>
           </form>
         </Box>
       </Stack>
     </Flex>
+  );
+}
+
+function Submit() {
+  const { pending } = useFormStatus();
+
+  return (
+    <Button
+      type="submit"
+      variant="solid"
+      width="full"
+      isDisabled={pending}
+      isLoading={pending}
+    >
+      Login
+    </Button>
   );
 }
