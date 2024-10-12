@@ -1,6 +1,7 @@
 "use client";
 
-import { useFormState, useFormStatus } from "react-dom";
+import type { ReactNode, PropsWithChildren } from "react";
+import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import {
   Alert,
@@ -13,6 +14,7 @@ import {
   Heading,
   Input,
   Stack,
+  type ButtonProps,
 } from "@chakra-ui/react";
 
 type TInitialValues = {
@@ -27,10 +29,18 @@ type TFormState = {
 };
 
 type LoginProps = {
-  initialValues: TInitialValues;
+  heading?: ReactNode;
+  initialValues?: TInitialValues;
+  buttonProps?: PropsWithChildren<ButtonProps>;
 };
 
-export default function Login({ initialValues }: Readonly<LoginProps>) {
+export default function Login({
+  heading = "Welcome",
+  initialValues,
+  buttonProps,
+}: Readonly<LoginProps>) {
+  const { children: buttonLabel = "Login", ...restButtonProps } =
+    buttonProps || {};
   const { push, refresh } = useRouter();
 
   const handleSubmit = async (
@@ -55,7 +65,7 @@ export default function Login({ initialValues }: Readonly<LoginProps>) {
     }
   };
 
-  const [state, formAction] = useFormState<TFormState, FormData>(
+  const [state, formAction, isPending] = useFormState<TFormState, FormData>(
     handleSubmit,
     {},
   );
@@ -75,7 +85,7 @@ export default function Login({ initialValues }: Readonly<LoginProps>) {
         alignItems="center"
         gap={4}
       >
-        <Heading>Welcome</Heading>
+        <Heading>{heading}</Heading>
         <Box minW={{ sm: "468px" }}>
           {state?.success === false && (
             <Alert status="error" mb={4}>
@@ -106,27 +116,20 @@ export default function Login({ initialValues }: Readonly<LoginProps>) {
                 required
                 defaultValue={initialValues?.job}
               />
-              <Submit />
+              <Button
+                type="submit"
+                variant="solid"
+                width="full"
+                isDisabled={isPending}
+                isLoading={isPending}
+                {...restButtonProps}
+              >
+                {buttonLabel}
+              </Button>
             </Stack>
           </form>
         </Box>
       </Stack>
     </Flex>
-  );
-}
-
-function Submit() {
-  const { pending } = useFormStatus();
-
-  return (
-    <Button
-      type="submit"
-      variant="solid"
-      width="full"
-      isDisabled={pending}
-      isLoading={pending}
-    >
-      Login
-    </Button>
   );
 }
