@@ -1,3 +1,4 @@
+import type { TCharacter } from "@/types/character";
 import type { LinkProps } from "next/link";
 import type { PropsWithChildren } from "react";
 
@@ -10,7 +11,7 @@ export type TGetCharactersQuery = {
       prev: number;
     };
     results: {
-      id: number;
+      id: string;
       name: string;
       image: string;
     }[];
@@ -19,6 +20,14 @@ export type TGetCharactersQuery = {
 
 export type TGetCharactersQueryVariables = {
   page?: number;
+};
+
+export type TGetCharacterQuery = {
+  character: TCharacter;
+};
+
+export type TGetCharacterQueryVariables = {
+  id: string;
 };
 
 export type NavLinkProps = PropsWithChildren<Omit<LinkProps, "as">>;

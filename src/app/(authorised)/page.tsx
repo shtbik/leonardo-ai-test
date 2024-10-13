@@ -1,50 +1,37 @@
 "use client";
 
 import { useCallback } from "react";
-import { gql, useQuery } from "@apollo/client";
+import { useLazyQuery, useQuery } from "@apollo/client";
 import {
   Alert,
-  AlertDescription,
   AlertIcon,
-  AlertTitle,
   SimpleGrid,
   Spinner,
   Stack,
+  useDisclosure,
 } from "@chakra-ui/react";
 import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/Card";
+import { CharacterModal } from "@/components/ui/Modals/Character";
 import { Pagination } from "@/components/ui/Pagination";
 import type { PaginationProps } from "@/components/ui/Pagination/types";
 import { usePagination } from "@/hooks/usePagination";
 
 import type {
+  TGetCharacterQuery,
+  TGetCharacterQueryVariables,
   TGetCharactersQuery,
   TGetCharactersQueryVariables,
 } from "./types";
-
-const CHARACTERS_QUERY = gql`
-  query GetCharacters($page: Int) {
-    characters(page: $page) {
-      info {
-        count
-        pages
-        next
-        prev
-      }
-      results {
-        id
-        name
-        image
-      }
-    }
-  }
-`;
+import type { TCharacter } from "@/types/character";
+import { CHARACTER_QUERY, CHARACTERS_QUERY } from "./queries";
 
 export default function Index() {
   const searchParams = useSearchParams();
   const pathname = usePathname();
   const { replace } = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { data, loading, error, refetch } = useQuery<
     TGetCharactersQuery,
@@ -52,6 +39,11 @@ export default function Index() {
   >(CHARACTERS_QUERY, {
     variables: { page: Number(searchParams.get("page")) || 1 },
   });
+
+  const [getCharacterQuery, getCharacterResponse] = useLazyQuery<
+    TGetCharacterQuery,
+    TGetCharacterQueryVariables
+  >(CHARACTER_QUERY);
 
   const { results = [], info } = data?.characters || {};
   const { count = 0, pages = 0, next = 0 } = info || {};
@@ -75,6 +67,14 @@ export default function Index() {
     [pathname, refetch, replace, searchParams],
   );
 
+  const handleCardClick = useCallback(
+    (id: TCharacter["id"]) => {
+      onOpen();
+      getCharacterQuery({ variables: { id } });
+    },
+    [getCharacterQuery, onOpen],
+  );
+
   if (loading) {
     return (
       <Stack
@@ -93,8 +93,7 @@ export default function Index() {
     return (
       <Alert status="error">
         <AlertIcon />
-        <AlertTitle>An issue occurred!</AlertTitle>
-        <AlertDescription>Try again later.</AlertDescription>
+        An issue occurred! Try again later.
       </Alert>
     );
 
@@ -121,9 +120,23 @@ export default function Index() {
 
       <SimpleGrid minChildWidth="250px" spacing="32px" my={6}>
         {results.map(({ id, name, image }) => (
-          <Card key={id} image={image} heading={name} />
+          <Card
+            key={id}
+            image={image}
+            heading={name}
+            onClick={() => handleCardClick(id)}
+            cursor="pointer"
+          />
         ))}
       </SimpleGrid>
+
+      <CharacterModal
+        isOpen={isOpen}
+        onClose={onClose}
+        loading={getCharacterResponse.loading}
+        error={Boolean(getCharacterResponse.error)}
+        character={getCharacterResponse.data?.character}
+      />
     </>
   );
 }

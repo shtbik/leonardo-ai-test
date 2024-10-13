@@ -10,9 +10,9 @@ import {
 } from "@chakra-ui/react";
 import type { CardProps } from "./types";
 
-export function Card({ image, heading }: CardProps) {
+export function Card({ image, heading, ...props }: CardProps) {
   return (
-    <Center pt={6}>
+    <Center pt={6} {...props}>
       <Box
         role="group"
         p={6}
