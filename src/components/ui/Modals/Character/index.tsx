@@ -76,7 +76,7 @@ function CharacterModalBody({
   return (
     <>
       <Avatar
-        size="xl"
+        size="2xl"
         src={character.image}
         mb={4}
         pos="relative"

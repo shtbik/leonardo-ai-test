@@ -12,7 +12,7 @@ import type { CardProps } from "./types";
 
 export function Card({ image, heading, ...props }: CardProps) {
   return (
-    <Center pt={6} {...props}>
+    <Center pt={6} as="button" {...props}>
       <Box
         role="group"
         p={6}
@@ -53,7 +53,7 @@ export function Card({ image, heading, ...props }: CardProps) {
             width={282}
             objectFit="cover"
             src={image}
-            alt="#"
+            alt={heading}
           />
         </Box>
         <Stack pt={10} align="center">
