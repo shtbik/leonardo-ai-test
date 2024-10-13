@@ -1,5 +1,7 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
+import Link, { type LinkProps } from "next/link";
 import { useAuth } from "@/providers/Auth";
 import {
   Box,
@@ -15,18 +17,17 @@ import {
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
 
-const Links = ["Dashboard", "Profile", "Logout"];
+type NavLinkProps = PropsWithChildren<Omit<LinkProps, "as">>;
 
-interface Props {
-  children: React.ReactNode;
-}
+const Links: NavLinkProps[] = [
+  { children: "Dashboard", href: "/" },
+  { children: "Profile", href: "/profile" },
+];
 
-const NavLink = (props: Props) => {
-  const { children } = props;
-
+const NavLink = ({ children, ...props }: NavLinkProps) => {
   return (
     <Box
-      as="a"
+      as={Link}
       px={2}
       py={1}
       rounded={"md"}
@@ -37,7 +38,7 @@ const NavLink = (props: Props) => {
       _first={{
         paddingLeft: 0,
       }}
-      href={"#"}
+      {...props}
     >
       {children}
     </Box>
@@ -69,8 +70,10 @@ export default function AuthorisedLayout({
               spacing={4}
               display={{ base: "none", md: "flex" }}
             >
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+              {Links.map((props) => (
+                <NavLink key={props.href.toString()} {...props}>
+                  {props.children}
+                </NavLink>
               ))}
             </HStack>
           </HStack>
@@ -95,8 +98,10 @@ export default function AuthorisedLayout({
         {isOpen ? (
           <Box pb={4} display={{ md: "none" }}>
             <Stack as={"nav"} spacing={4}>
-              {Links.map((link) => (
-                <NavLink key={link}>{link}</NavLink>
+              {Links.map((props) => (
+                <NavLink key={props.href.toString()} {...props}>
+                  {props.children}
+                </NavLink>
               ))}
             </Stack>
           </Box>
