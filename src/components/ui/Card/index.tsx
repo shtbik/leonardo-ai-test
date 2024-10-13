@@ -5,35 +5,30 @@ import {
   Center,
   useColorModeValue,
   Heading,
-  Text,
   Stack,
   Image,
 } from "@chakra-ui/react";
+import type { CardProps } from "./types";
 
-type TCardProps = {
-  heading: string;
-  image: string;
-};
-
-export default function Card({ image, heading }: TCardProps) {
+export function Card({ image, heading }: CardProps) {
   return (
     <Center pt={6}>
       <Box
-        role={"group"}
+        role="group"
         p={6}
-        maxW={"330px"}
-        w={"full"}
+        maxW="330px"
+        w="full"
         bg={useColorModeValue("white", "gray.800")}
-        boxShadow={"2xl"}
-        rounded={"lg"}
-        pos={"relative"}
+        boxShadow="2xl"
+        rounded="lg"
+        pos="relative"
         zIndex={1}
       >
         <Box
-          rounded={"lg"}
+          rounded="lg"
           mt={-12}
-          pos={"relative"}
-          height={"230px"}
+          pos="relative"
+          height="230px"
           _after={{
             transition: "all .3s ease",
             content: '""',
@@ -53,21 +48,18 @@ export default function Card({ image, heading }: TCardProps) {
           }}
         >
           <Image
-            rounded={"lg"}
+            rounded="lg"
             height={230}
             width={282}
-            objectFit={"cover"}
+            objectFit="cover"
             src={image}
             alt="#"
           />
         </Box>
-        <Stack pt={10} align={"center"}>
-          <Text color={"gray.500"} fontSize={"sm"} textTransform={"uppercase"}>
-            Name
-          </Text>
+        <Stack pt={10} align="center">
           <Heading
-            fontSize={"2xl"}
-            fontFamily={"body"}
+            fontSize="2xl"
+            fontFamily="body"
             fontWeight={500}
             noOfLines={1}
           >

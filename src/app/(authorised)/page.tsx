@@ -1,5 +1,6 @@
 "use client";
 
+import { useCallback } from "react";
 import { gql, useQuery } from "@apollo/client";
 import {
   Alert,
@@ -10,12 +11,20 @@ import {
   Spinner,
   Stack,
 } from "@chakra-ui/react";
-import Card from "@/components/Card";
-import type { TGetCharactersQuery } from "./types";
+
+import { Card } from "@/components/ui/Card";
+import { Pagination } from "@/components/ui/Pagination";
+import type { PaginationProps } from "@/components/ui/Pagination/types";
+import { usePagination } from "@/hooks/usePagination";
+
+import type {
+  TGetCharactersQuery,
+  TGetCharactersQueryVariables,
+} from "./types";
 
 const CHARACTERS_QUERY = gql`
-  query {
-    characters {
+  query GetCharacters($page: Int) {
+    characters(page: $page) {
       info {
         count
         pages
@@ -32,8 +41,28 @@ const CHARACTERS_QUERY = gql`
 `;
 
 export default function Index() {
-  const { data, loading, error } =
-    useQuery<TGetCharactersQuery>(CHARACTERS_QUERY);
+  const { data, loading, error, refetch } = useQuery<
+    TGetCharactersQuery,
+    TGetCharactersQueryVariables
+  >(CHARACTERS_QUERY);
+
+  const { results = [], info } = data?.characters || {};
+  const { count = 0, pages = 0, next = 0 } = info || {};
+
+  const { currentPage, lastPage, nextPages, previousPages, siblingsCount } =
+    usePagination({
+      total: count,
+      page: (next || pages + 1) - 1,
+      itemsPerPage: 20,
+      siblingsCount: 1,
+    });
+
+  const handlePageChange = useCallback<PaginationProps["onPageChange"]>(
+    (page) => {
+      refetch({ page });
+    },
+    [refetch],
+  );
 
   if (loading) {
     return (
@@ -59,10 +88,22 @@ export default function Index() {
     );
 
   return (
-    <SimpleGrid minChildWidth="250px" spacing="40px" pt={6}>
-      {data?.characters.results.map(({ id, name, image }) => (
-        <Card key={id} image={image} heading={name} />
-      ))}
-    </SimpleGrid>
+    <>
+      <Pagination
+        onPageChange={handlePageChange}
+        currentPage={currentPage}
+        lastPage={lastPage}
+        nextPages={nextPages}
+        previousPages={previousPages}
+        siblingsCount={siblingsCount}
+        mb={8}
+      />
+
+      <SimpleGrid minChildWidth="250px" spacing="32px" my={6}>
+        {results.map(({ id, name, image }) => (
+          <Card key={id} image={image} heading={name} />
+        ))}
+      </SimpleGrid>
+    </>
   );
 }

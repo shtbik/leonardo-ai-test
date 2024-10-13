@@ -122,6 +122,7 @@ export default function Login({
                 width="full"
                 isDisabled={isPending}
                 isLoading={isPending}
+                colorScheme="blue"
                 {...restButtonProps}
               >
                 {buttonLabel}

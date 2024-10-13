@@ -1,3 +1,6 @@
+import type { LinkProps } from "next/link";
+import type { PropsWithChildren } from "react";
+
 export type TGetCharactersQuery = {
   characters: {
     info: {
@@ -13,3 +16,9 @@ export type TGetCharactersQuery = {
     }[];
   };
 };
+
+export type TGetCharactersQueryVariables = {
+  page?: number;
+};
+
+export type NavLinkProps = PropsWithChildren<Omit<LinkProps, "as">>;
