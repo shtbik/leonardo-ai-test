@@ -1,6 +1,5 @@
 "use client";
 
-import type { ReactNode, PropsWithChildren } from "react";
 import { useFormState } from "react-dom";
 import { useRouter } from "next/navigation";
 import {
@@ -14,31 +13,14 @@ import {
   Heading,
   Input,
   Stack,
-  type ButtonProps,
 } from "@chakra-ui/react";
-
-type TInitialValues = {
-  username: string;
-  job: string;
-};
-
-type TFormState = {
-  success?: boolean;
-  message?: string;
-  description?: string;
-};
-
-type LoginProps = {
-  heading?: ReactNode;
-  initialValues?: TInitialValues;
-  buttonProps?: PropsWithChildren<ButtonProps>;
-};
+import type { LoginProps, TFormState } from "./types";
 
 export default function Login({
   heading = "Welcome",
   initialValues,
   buttonProps,
-}: Readonly<LoginProps>) {
+}: LoginProps) {
   const { children: buttonLabel = "Login", ...restButtonProps } =
     buttonProps || {};
   const { push, refresh } = useRouter();
