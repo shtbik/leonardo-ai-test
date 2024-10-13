@@ -11,6 +11,7 @@ import {
   Spinner,
   Stack,
 } from "@chakra-ui/react";
+import { useSearchParams, usePathname, useRouter } from "next/navigation";
 
 import { Card } from "@/components/ui/Card";
 import { Pagination } from "@/components/ui/Pagination";
@@ -41,10 +42,16 @@ const CHARACTERS_QUERY = gql`
 `;
 
 export default function Index() {
+  const searchParams = useSearchParams();
+  const pathname = usePathname();
+  const { replace } = useRouter();
+
   const { data, loading, error, refetch } = useQuery<
     TGetCharactersQuery,
     TGetCharactersQueryVariables
-  >(CHARACTERS_QUERY);
+  >(CHARACTERS_QUERY, {
+    variables: { page: Number(searchParams.get("page")) || 1 },
+  });
 
   const { results = [], info } = data?.characters || {};
   const { count = 0, pages = 0, next = 0 } = info || {};
@@ -59,9 +66,13 @@ export default function Index() {
 
   const handlePageChange = useCallback<PaginationProps["onPageChange"]>(
     (page) => {
-      refetch({ page });
+      refetch({ page }).then(() => {
+        const params = new URLSearchParams(searchParams);
+        params.set("page", String(page));
+        replace(`${pathname}?${params.toString()}`);
+      });
     },
-    [refetch],
+    [pathname, refetch, replace, searchParams],
   );
 
   if (loading) {
@@ -86,6 +97,15 @@ export default function Index() {
         <AlertDescription>Try again later.</AlertDescription>
       </Alert>
     );
+
+  if (results.length === 0) {
+    return (
+      <Alert status="info">
+        <AlertIcon />
+        Results are empty
+      </Alert>
+    );
+  }
 
   return (
     <>
