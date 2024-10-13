@@ -33,9 +33,6 @@ const NavLink = ({ children, ...props }: NavLinkProps) => {
         textDecoration: "none",
         bg: useColorModeValue("gray.200", "gray.700"),
       }}
-      _first={{
-        paddingLeft: 0,
-      }}
       {...props}
     >
       {children}
@@ -74,12 +71,7 @@ export default function AuthorisedLayout({
           <Flex alignItems="center">
             <HStack>
               <Avatar size="sm" />
-              <VStack
-                display={{ base: "none", md: "flex" }}
-                alignItems="flex-start"
-                spacing="1px"
-                ml="2"
-              >
+              <VStack alignItems="flex-start" spacing="1px" ml="2">
                 <Text fontSize="sm">{user.username}</Text>
                 <Text fontSize="xs" color="gray.600">
                   {user.job}
