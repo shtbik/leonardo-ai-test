@@ -1,6 +1,6 @@
-import type { TCharacter } from "@/types/character";
-import type { LinkProps } from "next/link";
 import type { PropsWithChildren } from "react";
+import type { LinkProps } from "next/link";
+import type { TCharacter } from "@/types/character";
 
 export type TGetCharactersQuery = {
   characters: {

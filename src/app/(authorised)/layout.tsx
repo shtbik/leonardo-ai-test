@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { useAuth } from "@/providers/Auth";
 import {
   Box,
   Flex,
@@ -15,6 +14,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { HamburgerIcon, CloseIcon } from "@chakra-ui/icons";
+
+import { useAuth } from "@/providers/Auth";
 import type { NavLinkProps } from "./types";
 
 const Links: NavLinkProps[] = [
@@ -22,31 +23,13 @@ const Links: NavLinkProps[] = [
   { children: "Profile", href: "/profile" },
 ];
 
-const NavLink = ({ children, ...props }: NavLinkProps) => {
-  return (
-    <Box
-      as={Link}
-      px={2}
-      py={1}
-      rounded="md"
-      _hover={{
-        textDecoration: "none",
-        bg: useColorModeValue("gray.200", "gray.700"),
-      }}
-      {...props}
-    >
-      {children}
-    </Box>
-  );
-};
-
 export default function AuthorisedLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const user = useAuth();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <>
@@ -98,3 +81,21 @@ export default function AuthorisedLayout({
     </>
   );
 }
+
+const NavLink = ({ children, ...props }: NavLinkProps) => {
+  return (
+    <Box
+      as={Link}
+      px={2}
+      py={1}
+      rounded="md"
+      _hover={{
+        textDecoration: "none",
+        bg: useColorModeValue("gray.200", "gray.700"),
+      }}
+      {...props}
+    >
+      {children}
+    </Box>
+  );
+};

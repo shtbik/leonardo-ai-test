@@ -15,8 +15,9 @@ import { useSearchParams, usePathname, useRouter } from "next/navigation";
 import { Card } from "@/components/ui/Card";
 import { CharacterModal } from "@/components/ui/Modals/Character";
 import { Pagination } from "@/components/ui/Pagination";
-import type { PaginationProps } from "@/components/ui/Pagination/types";
 import { usePagination } from "@/hooks/usePagination";
+import type { PaginationProps } from "@/components/ui/Pagination/types";
+import type { TCharacter } from "@/types/character";
 
 import type {
   TGetCharacterQuery,
@@ -24,7 +25,6 @@ import type {
   TGetCharactersQuery,
   TGetCharactersQueryVariables,
 } from "./types";
-import type { TCharacter } from "@/types/character";
 import { CHARACTER_QUERY, CHARACTERS_QUERY } from "./queries";
 
 export default function Index() {
@@ -70,6 +70,7 @@ export default function Index() {
   const handleCardClick = useCallback(
     (id: TCharacter["id"]) => {
       onOpen();
+      // don't wait here to show the loading/error inside the modal
       getCharacterQuery({ variables: { id } });
     },
     [getCharacterQuery, onOpen],

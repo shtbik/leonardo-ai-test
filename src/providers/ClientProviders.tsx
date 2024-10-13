@@ -1,12 +1,13 @@
 "use client";
 
+import type { PropsWithChildren } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
-import { ApolloWrapper } from "./Apollo";
+import { ApolloProvider } from "./Apollo";
 
-export function ClientProviders({ children }: { children: React.ReactNode }) {
+export function ClientProviders({ children }: PropsWithChildren) {
   return (
-    <ApolloWrapper>
+    <ApolloProvider>
       <ChakraProvider>{children}</ChakraProvider>
-    </ApolloWrapper>
+    </ApolloProvider>
   );
 }

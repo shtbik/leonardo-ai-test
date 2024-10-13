@@ -1,7 +1,7 @@
 "use client";
 
-import { TSessionData } from "@/types/session";
-import { createContext, useContext } from "react";
+import type { TSessionData } from "@/types/session";
+import { createContext, type PropsWithChildren, useContext } from "react";
 
 export const AuthContextInitialValue: TSessionData = {
   username: "",
@@ -15,11 +15,10 @@ export function useAuth() {
 }
 
 export default function AuthProvider({
-  children,
   user,
-}: {
-  children: React.ReactNode;
+  children,
+}: PropsWithChildren<{
   user: TSessionData;
-}) {
+}>) {
   return <AuthContext.Provider value={user}>{children}</AuthContext.Provider>;
 }

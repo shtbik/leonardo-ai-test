@@ -1,3 +1,4 @@
+// Ideally should be generated based on OpenAPI and GraphQL schemas
 export type TCharacter = {
   id: string;
   name: string;

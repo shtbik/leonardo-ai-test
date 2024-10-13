@@ -8,7 +8,7 @@ Disclaimer
 
 - The last time I worked with NextJS was 3.5 years ago, when the 10th version was available. While I remember some of the principles of the framework, I had to review the documentation to complete the task. There is definitely room for optimization and I kindly ask you to take this into consideration.
 - I have put effort into making my code production-ready, but please take this with a grain of salt. Below is a list of what I would do before launching this for customers:
-  - Implement more efficient rendering (e.g. SSR for the initial list of cards, pre-fetch images)
+  - Implement more efficient rendering (e.g. fetching data on the server for the initial list of cards, pre-fetch images)
   - Add unit and e2e tests
   - Write cleaner code with more granulated components and types
   - Generate types based on the API
